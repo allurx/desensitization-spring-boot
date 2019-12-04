@@ -20,6 +20,25 @@
         <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
     </properties>
 
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/Allurx/desensitization-spring-boot</url>
+        <connection>scm:git:https://github.com/Allurx/desensitization-spring-boot.git</connection>
+        <developerConnection>scm:git:https://github.com/Allurx/desensitization-spring-boot.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/Allurx/desensitization-spring-boot/issues</url>
+    </issueManagement>
+
     <developers>
         <developer>
             <name>zyc</name>
@@ -38,8 +57,14 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
+                <groupId>red.zyc</groupId>
+                <artifactId>desensitization-spring-boot-autoconfigure</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>red.zyc</groupId>
+                <artifactId>desensitization-spring-boot-autoconfigure</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>red.zyc</groupId>
@@ -48,6 +73,19 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Nexus Snapshots Repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Nexus Release Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <profiles>
         <profile>

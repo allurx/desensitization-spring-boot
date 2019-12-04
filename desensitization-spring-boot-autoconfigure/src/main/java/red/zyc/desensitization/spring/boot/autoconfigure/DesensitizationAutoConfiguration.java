@@ -16,15 +16,42 @@
 
 package red.zyc.desensitization.spring.boot.autoconfigure;
 
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Configuration;
+import red.zyc.desensitization.util.ReflectionUtil;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.Arrays;
 
 /**
  * @author zyc
  */
 @Aspect
 @Configuration
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 public class DesensitizationAutoConfiguration {
+
+    @Pointcut("execution(* *(..))")
+    public void pointcut() {
+    }
+
+    @Around("pointcut()")
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object[] args = joinPoint.getArgs();
+        Signature signature = joinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature) signature;
+        Method targetMethod = methodSignature.getMethod();
+        Parameter[] parameters = targetMethod.getParameters();
+        Arrays.stream(parameters)
+                .filter(parameter -> parameter.getDeclaredAnnotations().length > 0 &&
+                        ReflectionUtil.getFirstSensitiveAnnotationOnAnnotatedType(parameter.getAnnotatedType()) != null)
+                .forEach(parameter -> parameter.getType());
+        return joinPoint.proceed();
+    }
+
 }
