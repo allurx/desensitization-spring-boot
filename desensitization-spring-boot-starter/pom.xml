@@ -9,7 +9,6 @@
     </parent>
     <groupId>red.zyc</groupId>
     <artifactId>desensitization-spring-boot-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>desensitization-spring-boot-starter</name>
     <description>desensitization-spring-boot-starter</description>
 

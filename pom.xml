@@ -16,8 +16,9 @@
     </modules>
 
     <properties>
-        <desensitization.version>2.2.7</desensitization.version>
+        <desensitization.version>2.2.8</desensitization.version>
         <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <licenses>
@@ -63,7 +64,7 @@
             </dependency>
             <dependency>
                 <groupId>red.zyc</groupId>
-                <artifactId>desensitization-spring-boot-autoconfigure</artifactId>
+                <artifactId>desensitization-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

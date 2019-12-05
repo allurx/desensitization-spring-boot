@@ -23,11 +23,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.annotation.Configuration;
-import red.zyc.desensitization.util.ReflectionUtil;
+import red.zyc.desensitization.Sensitive;
+import red.zyc.desensitization.resolver.TypeToken;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
+import java.util.stream.IntStream;
 
 /**
  * @author zyc
@@ -47,11 +48,8 @@ public class DesensitizationAutoConfiguration {
         MethodSignature methodSignature = (MethodSignature) signature;
         Method targetMethod = methodSignature.getMethod();
         Parameter[] parameters = targetMethod.getParameters();
-        Arrays.stream(parameters)
-                .filter(parameter -> parameter.getDeclaredAnnotations().length > 0 &&
-                        ReflectionUtil.getFirstSensitiveAnnotationOnAnnotatedType(parameter.getAnnotatedType()) != null)
-                .forEach(parameter -> parameter.getType());
-        return joinPoint.proceed();
+        IntStream.range(0, parameters.length).forEach(i -> args[i] = Sensitive.desensitize(args[i], TypeToken.of(parameters[i].getAnnotatedType())));
+        return Sensitive.desensitize(joinPoint.proceed(args), TypeToken.of(targetMethod.getAnnotatedReturnType()));
     }
 
 }

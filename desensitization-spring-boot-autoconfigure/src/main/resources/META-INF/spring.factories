@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+red.zyc.desensitization.spring.boot.autoconfigure.DesensitizationAutoConfiguration
