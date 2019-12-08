@@ -93,7 +93,7 @@ public class DesensitizationAutoConfiguration implements ApplicationContextAware
     }
 
     /**
-     * 用来解析{@link ResponseEntity}返回值的类型解析器
+     * 用来解析返回值类型为{@link ResponseEntity}的类型解析器
      */
     public static class ResponseEntityResolver implements Resolver<ResponseEntity<?>, AnnotatedParameterizedType> {
 

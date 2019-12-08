@@ -13,6 +13,7 @@
     <modules>
         <module>desensitization-spring-boot-autoconfigure</module>
         <module>desensitization-spring-boot-starter</module>
+        <module>desensitization-spring-boot-samples</module>
     </modules>
 
     <properties>
