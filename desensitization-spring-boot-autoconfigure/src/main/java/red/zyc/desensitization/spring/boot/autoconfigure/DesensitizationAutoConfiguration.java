@@ -16,40 +16,105 @@
 
 package red.zyc.desensitization.spring.boot.autoconfigure;
 
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.aop.Advisor;
+import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import red.zyc.desensitization.Sensitive;
-import red.zyc.desensitization.resolver.TypeToken;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
+import red.zyc.desensitization.resolver.Resolver;
+import red.zyc.desensitization.resolver.Resolvers;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.stream.IntStream;
+import java.lang.reflect.AnnotatedParameterizedType;
+import java.lang.reflect.AnnotatedType;
+import java.util.Optional;
 
 /**
  * @author zyc
  */
-@Aspect
 @Configuration
-public class DesensitizationAutoConfiguration {
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@EnableConfigurationProperties(DesensitizationProperties.class)
+public class DesensitizationAutoConfiguration implements ApplicationContextAware {
 
-    @Pointcut("execution(* *(..))")
-    public void pointcut() {
+    static final ThreadLocal<SpringApplication> SPRING_APPLICATION_HOLDER = new ThreadLocal<>();
+    private final DesensitizationProperties desensitizationProperties;
+    private ApplicationContext applicationContext;
+
+    public DesensitizationAutoConfiguration(DesensitizationProperties desensitizationProperties) {
+        this.desensitizationProperties = desensitizationProperties;
     }
 
-    @Around("pointcut()")
-    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object[] args = joinPoint.getArgs();
-        Signature signature = joinPoint.getSignature();
-        MethodSignature methodSignature = (MethodSignature) signature;
-        Method targetMethod = methodSignature.getMethod();
-        Parameter[] parameters = targetMethod.getParameters();
-        IntStream.range(0, parameters.length).forEach(i -> args[i] = Sensitive.desensitize(args[i], TypeToken.of(parameters[i].getAnnotatedType())));
-        return Sensitive.desensitize(joinPoint.proceed(args), TypeToken.of(targetMethod.getAnnotatedReturnType()));
+    @Bean
+    public Advisor desensitizationAdvisor() {
+        try {
+            AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
+            advisor.setAdvice(new MethodDesensitizationInterceptor());
+            advisor.setExpression(pointcutExpression());
+            return advisor;
+        } finally {
+            SPRING_APPLICATION_HOLDER.remove();
+        }
+    }
+
+    @Bean
+    public Resolver<ResponseEntity<?>, AnnotatedParameterizedType> responseEntityResolver() {
+        return new ResponseEntityResolver();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+        registerResolvers();
+    }
+
+    /**
+     * @return 切点表达式字符串
+     */
+    private String pointcutExpression() {
+        SpringApplication springApplication = SPRING_APPLICATION_HOLDER.get();
+        Assert.notNull(springApplication, () -> "无法获取SpringApplication！当前应用可能不是spring-boot工程。");
+        return Optional.ofNullable(desensitizationProperties.getPointcutExpression())
+                .orElse("execution(* "
+                        + springApplication.getMainApplicationClass().getPackage().getName()
+                        + "..*.*(..))");
+    }
+
+    /**
+     * 注册类型解析器
+     */
+    private void registerResolvers() {
+        applicationContext.getBeansOfType(Resolver.class).values().forEach(Resolvers::register);
+    }
+
+    /**
+     * 用来解析{@link ResponseEntity}返回值的类型解析器
+     */
+    public static class ResponseEntityResolver implements Resolver<ResponseEntity<?>, AnnotatedParameterizedType> {
+
+        private final int order = Resolvers.randomOrder();
+
+        @Override
+        public ResponseEntity<?> resolve(ResponseEntity responseEntity, AnnotatedParameterizedType annotatedParameterizedType) {
+            AnnotatedType typeArgument = annotatedParameterizedType.getAnnotatedActualTypeArguments()[0];
+            Object erased = Resolvers.resolve(responseEntity.getBody(), typeArgument);
+            return new ResponseEntity<>(erased, responseEntity.getHeaders(), responseEntity.getStatusCode());
+        }
+
+        @Override
+        public boolean support(Object value, AnnotatedType annotatedType) {
+            return value instanceof ResponseEntity && annotatedType instanceof AnnotatedParameterizedType;
+        }
+
+        @Override
+        public int order() {
+            return order;
+        }
     }
 
 }
