@@ -18,9 +18,13 @@ package red.zyc.desensitization.spring.boot.sample.web.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import red.zyc.desensitization.annotation.CascadeSensitive;
+import red.zyc.desensitization.annotation.ChineseNameSensitive;
 import red.zyc.desensitization.annotation.EmailSensitive;
+import red.zyc.desensitization.spring.boot.sample.web.model.Person;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zyc
@@ -31,22 +35,53 @@ import java.util.List;
 public class DesensitizationController {
 
     @GetMapping("/stringParameter")
-    public ResponseEntity<String> desensitizationStringParameter(@RequestParam @EmailSensitive String email) {
+    public ResponseEntity<String> desensitizeStringParameter(@RequestParam @EmailSensitive String email) {
         return ResponseEntity.ok(email);
     }
 
     @GetMapping("/stringReturnValue")
-    public ResponseEntity<@EmailSensitive String> desensitizationStringReturnValue(@RequestParam String email) {
+    public ResponseEntity<@EmailSensitive String> desensitizeStringReturnValue(@RequestParam String email) {
         return ResponseEntity.ok(email);
     }
 
     @PostMapping("/collectionParameter")
-    public ResponseEntity<List<String>> desensitizationCollectionParameter(@RequestBody List<@EmailSensitive String> emails) {
+    public ResponseEntity<List<String>> desensitizeCollectionParameter(@RequestBody List<@EmailSensitive String> emails) {
         return ResponseEntity.ok(emails);
     }
 
     @PostMapping("/collectionReturnValue")
-    public ResponseEntity<List<@EmailSensitive String>> desensitizationCollectionReturnValue(@RequestBody List<String> emails) {
+    public ResponseEntity<List<@EmailSensitive String>> desensitizeCollectionReturnValue(@RequestBody List<String> emails) {
         return ResponseEntity.ok(emails);
     }
+
+    @PostMapping("/mapParameter")
+    public ResponseEntity<Map<String, Person>> desensitizeMapParameter(@RequestBody Map<@ChineseNameSensitive String, @CascadeSensitive Person> map) {
+        return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/mapReturnValue")
+    public ResponseEntity<Map<@ChineseNameSensitive String, @CascadeSensitive Person>> desensitizeMapReturnValue(@RequestBody Map<String, Person> map) {
+        return ResponseEntity.ok(map);
+    }
+
+    @PostMapping("/arrayParameter")
+    public ResponseEntity<String[]> desensitizeArrayParameter(@RequestBody @EmailSensitive String[] array) {
+        return ResponseEntity.ok(array);
+    }
+
+    @PostMapping("/arrayReturnValue")
+    public ResponseEntity<@EmailSensitive String[]> desensitizeArrayReturnValue(@RequestBody String[] array) {
+        return ResponseEntity.ok(array);
+    }
+
+    @PostMapping("/objectParameter")
+    public ResponseEntity<Person> desensitizeObjectParameter(@RequestBody @CascadeSensitive Person person) {
+        return ResponseEntity.ok(person);
+    }
+
+    @PostMapping("/objectReturnValue")
+    public ResponseEntity<@CascadeSensitive Person> desensitizeObjectReturnValue(@RequestBody Person person) {
+        return ResponseEntity.ok(person);
+    }
+
 }
