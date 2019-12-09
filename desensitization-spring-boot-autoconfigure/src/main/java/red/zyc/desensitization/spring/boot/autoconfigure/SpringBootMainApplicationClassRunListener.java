@@ -18,6 +18,9 @@ package red.zyc.desensitization.spring.boot.autoconfigure;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
+import org.springframework.context.ConfigurableApplicationContext;
+import red.zyc.desensitization.resolver.Resolver;
+import red.zyc.desensitization.resolver.Resolvers;
 
 /**
  * @author zyc
@@ -36,5 +39,11 @@ public class SpringBootMainApplicationClassRunListener implements SpringApplicat
     @Override
     public void starting() {
         DesensitizationAutoConfiguration.SPRING_APPLICATION_HOLDER.set(springApplication);
+    }
+
+    @Override
+    public void running(ConfigurableApplicationContext context) {
+        DesensitizationAutoConfiguration.SPRING_APPLICATION_HOLDER.remove();
+        context.getBeansOfType(Resolver.class).values().forEach(Resolvers::register);
     }
 }

@@ -19,10 +19,9 @@ package red.zyc.desensitization.spring.boot.autoconfigure;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
@@ -40,37 +39,29 @@ import java.util.Optional;
 @Configuration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @EnableConfigurationProperties(DesensitizationProperties.class)
-public class DesensitizationAutoConfiguration implements ApplicationContextAware {
+public class DesensitizationAutoConfiguration {
 
-    static final ThreadLocal<SpringApplication> SPRING_APPLICATION_HOLDER = new ThreadLocal<>();
+    private static final String DESENSITIZATION_ADVISOR = "desensitizationAdvisor";
     private final DesensitizationProperties desensitizationProperties;
-    private ApplicationContext applicationContext;
+    static final ThreadLocal<SpringApplication> SPRING_APPLICATION_HOLDER = new ThreadLocal<>();
 
     public DesensitizationAutoConfiguration(DesensitizationProperties desensitizationProperties) {
         this.desensitizationProperties = desensitizationProperties;
     }
 
     @Bean
+    @ConditionalOnMissingBean(name = DESENSITIZATION_ADVISOR)
     public Advisor desensitizationAdvisor() {
-        try {
-            AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
-            advisor.setAdvice(new MethodDesensitizationInterceptor());
-            advisor.setExpression(pointcutExpression());
-            return advisor;
-        } finally {
-            SPRING_APPLICATION_HOLDER.remove();
-        }
+        AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
+        advisor.setAdvice(new MethodDesensitizationInterceptor());
+        advisor.setExpression(pointcutExpression());
+        advisor.setParameterNames();
+        return advisor;
     }
 
     @Bean
     public Resolver<ResponseEntity<?>, AnnotatedParameterizedType> responseEntityResolver() {
         return new ResponseEntityResolver();
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-        registerResolvers();
     }
 
     /**
@@ -83,13 +74,6 @@ public class DesensitizationAutoConfiguration implements ApplicationContextAware
                 .orElse("execution(* "
                         + springApplication.getMainApplicationClass().getPackage().getName()
                         + "..*.*(..))");
-    }
-
-    /**
-     * 注册类型解析器
-     */
-    private void registerResolvers() {
-        applicationContext.getBeansOfType(Resolver.class).values().forEach(Resolvers::register);
     }
 
     /**

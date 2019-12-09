@@ -18,9 +18,13 @@ package red.zyc.desensitization.spring.boot.sample.web.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import red.zyc.desensitization.annotation.CascadeSensitive;
+import red.zyc.desensitization.annotation.ChineseNameSensitive;
 import red.zyc.desensitization.annotation.EmailSensitive;
+import red.zyc.desensitization.spring.boot.sample.web.model.Person;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zyc
@@ -49,4 +53,10 @@ public class DesensitizationController {
     public ResponseEntity<List<@EmailSensitive String>> desensitizationCollectionReturnValue(@RequestBody List<String> emails) {
         return ResponseEntity.ok(emails);
     }
+
+    @PostMapping("/mapParameter")
+    public ResponseEntity<Map<String, Person>> desensitizationCollectionParameter(Map<@ChineseNameSensitive String, @CascadeSensitive Person> map) {
+        return ResponseEntity.ok(map);
+    }
+
 }

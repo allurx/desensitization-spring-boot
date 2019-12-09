@@ -17,7 +17,7 @@
     </modules>
 
     <properties>
-        <desensitization.version>2.2.9</desensitization.version>
+        <desensitization.version>2.2.10</desensitization.version>
         <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

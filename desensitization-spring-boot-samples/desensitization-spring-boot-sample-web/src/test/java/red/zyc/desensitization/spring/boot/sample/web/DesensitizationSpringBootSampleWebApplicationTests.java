@@ -22,8 +22,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import red.zyc.desensitization.spring.boot.sample.web.model.Person;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,7 +41,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
     private TestRestTemplate restTemplate;
 
     /**
-     * 脱敏字符串参数
+     * 字符串参数脱敏
      */
     @Test
     public void desensitizationStringParameter() {
@@ -47,7 +49,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
     }
 
     /**
-     * 脱敏字符串返回值
+     * 字符串返回值脱敏
      */
     @Test
     public void desensitizationStringReturnValue() {
@@ -55,7 +57,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
     }
 
     /**
-     * 脱敏集合参数
+     * 集合参数脱敏
      */
     @Test
     public void desensitizationCollectionParameter() {
@@ -63,10 +65,21 @@ class DesensitizationSpringBootSampleWebApplicationTests {
     }
 
     /**
-     * 脱敏集合返回值
+     * 集合返回值脱敏
      */
     @Test
     public void desensitizationCollectionReturnValue() {
         LOGGER.info(restTemplate.postForObject("/desensitization/collectionReturnValue", Stream.of("123456@qq.com", "1234567@qq.com", "1234568@qq.com").collect(Collectors.toList()), List.class).toString());
     }
+
+    /**
+     * Map参数脱敏
+     */
+    @Test
+    public void desensitizationMapParameter() {
+        Map<String, String> map = Stream.of("张三", "李四")
+                .collect(Collectors.toMap(s -> s, o -> new Person("12345678910", "123@qq.com").toString()));
+        LOGGER.info(restTemplate.postForObject("/desensitization/mapParameter", map, Map.class).toString());
+    }
+
 }
