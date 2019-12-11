@@ -55,7 +55,6 @@ public class DesensitizationAutoConfiguration {
         AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
         advisor.setAdvice(new MethodDesensitizationInterceptor());
         advisor.setExpression(pointcutExpression());
-        advisor.setParameterNames();
         return advisor;
     }
 
