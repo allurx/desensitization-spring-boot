@@ -8,6 +8,7 @@
     <packaging>pom</packaging>
 
     <name>desensitization-spring-boot</name>
+    <url>https://github.com/Allurx/desensitization-spring-boot</url>
     <description>desensitization-spring-boot</description>
 
     <modules>
