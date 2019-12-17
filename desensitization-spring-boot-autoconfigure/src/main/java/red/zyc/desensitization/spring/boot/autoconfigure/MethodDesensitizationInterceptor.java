@@ -20,7 +20,7 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import red.zyc.desensitization.Sensitive;
 import red.zyc.desensitization.annotation.CascadeSensitive;
-import red.zyc.desensitization.resolver.TypeToken;
+import red.zyc.desensitization.support.TypeToken;
 import red.zyc.desensitization.util.ReflectionUtil;
 
 import java.lang.reflect.*;
