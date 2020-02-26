@@ -83,7 +83,7 @@ public class DesensitizationAutoConfiguration {
         private final int order = TypeResolvers.randomOrder();
 
         @Override
-        public ResponseEntity<?> resolve(ResponseEntity responseEntity, AnnotatedParameterizedType annotatedParameterizedType) {
+        public ResponseEntity<?> resolve(ResponseEntity<?> responseEntity, AnnotatedParameterizedType annotatedParameterizedType) {
             AnnotatedType typeArgument = annotatedParameterizedType.getAnnotatedActualTypeArguments()[0];
             Object erased = TypeResolvers.resolve(responseEntity.getBody(), typeArgument);
             return new ResponseEntity<>(erased, responseEntity.getHeaders(), responseEntity.getStatusCode());

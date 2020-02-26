@@ -23,7 +23,13 @@ import red.zyc.desensitization.annotation.CascadeSensitive;
 import red.zyc.desensitization.support.TypeToken;
 import red.zyc.desensitization.util.ReflectionUtil;
 
-import java.lang.reflect.*;
+import java.lang.reflect.AnnotatedArrayType;
+import java.lang.reflect.AnnotatedParameterizedType;
+import java.lang.reflect.AnnotatedType;
+import java.lang.reflect.AnnotatedTypeVariable;
+import java.lang.reflect.AnnotatedWildcardType;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
