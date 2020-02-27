@@ -26,8 +26,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import red.zyc.desensitization.resolver.Resolver;
-import red.zyc.desensitization.resolver.Resolvers;
+import red.zyc.desensitization.resolver.TypeResolver;
+import red.zyc.desensitization.resolver.TypeResolvers;
 
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
@@ -55,13 +55,12 @@ public class DesensitizationAutoConfiguration {
         AspectJExpressionPointcutAdvisor advisor = new AspectJExpressionPointcutAdvisor();
         advisor.setAdvice(new MethodDesensitizationInterceptor());
         advisor.setExpression(pointcutExpression());
-        advisor.setParameterNames();
         return advisor;
     }
 
     @Bean
-    public Resolver<ResponseEntity<?>, AnnotatedParameterizedType> responseEntityResolver() {
-        return new ResponseEntityResolver();
+    public TypeResolver<ResponseEntity<?>, AnnotatedParameterizedType> responseEntityResolver() {
+        return new ResponseEntityTypeResolver();
     }
 
     /**
@@ -79,14 +78,14 @@ public class DesensitizationAutoConfiguration {
     /**
      * 用来解析返回值类型为{@link ResponseEntity}的类型解析器
      */
-    public static class ResponseEntityResolver implements Resolver<ResponseEntity<?>, AnnotatedParameterizedType> {
+    public static class ResponseEntityTypeResolver implements TypeResolver<ResponseEntity<?>, AnnotatedParameterizedType> {
 
-        private final int order = Resolvers.randomOrder();
+        private final int order = TypeResolvers.randomOrder();
 
         @Override
-        public ResponseEntity<?> resolve(ResponseEntity responseEntity, AnnotatedParameterizedType annotatedParameterizedType) {
+        public ResponseEntity<?> resolve(ResponseEntity<?> responseEntity, AnnotatedParameterizedType annotatedParameterizedType) {
             AnnotatedType typeArgument = annotatedParameterizedType.getAnnotatedActualTypeArguments()[0];
-            Object erased = Resolvers.resolve(responseEntity.getBody(), typeArgument);
+            Object erased = TypeResolvers.resolve(responseEntity.getBody(), typeArgument);
             return new ResponseEntity<>(erased, responseEntity.getHeaders(), responseEntity.getStatusCode());
         }
 

@@ -26,18 +26,18 @@ public class DesensitizationProperties {
     /**
      * 切点表达式，只支持以下几种AspectJ切点表达式原语：
      * <ul>
-     *     {@link PointcutPrimitive#EXECUTION}
-     *     {@link PointcutPrimitive#ARGS}
-     *     {@link PointcutPrimitive#REFERENCE}
-     *     {@link PointcutPrimitive#THIS}
-     *     {@link PointcutPrimitive#TARGET}
-     *     {@link PointcutPrimitive#WITHIN}
-     *     {@link PointcutPrimitive#AT_ANNOTATION}
-     *     {@link PointcutPrimitive#AT_WITHIN}
-     *     {@link PointcutPrimitive#AT_ARGS}
-     *     {@link PointcutPrimitive#AT_TARGET}
+     *     <li>{@link PointcutPrimitive#EXECUTION}</li>
+     *     <li>{@link PointcutPrimitive#ARGS}</li>
+     *     <li>{@link PointcutPrimitive#REFERENCE}</li>
+     *     <li>{@link PointcutPrimitive#THIS}</li>
+     *     <li>{@link PointcutPrimitive#TARGET}</li>
+     *     <li>{@link PointcutPrimitive#WITHIN}</li>
+     *     <li>{@link PointcutPrimitive#AT_ANNOTATION}</li>
+     *     <li>{@link PointcutPrimitive#AT_WITHIN}</li>
+     *     <li>{@link PointcutPrimitive#AT_ARGS}</li>
+     *     <li>{@link PointcutPrimitive#AT_TARGET}</li>
      * </ul>
-     * 默认的切点表达式是当前spring-boot工程启动类所在的包及其子包下的所有方法
+     * <strong>默认的切点表达式是当前spring-boot工程启动类所在的包及其子包下的所有方法</strong>
      */
     private String pointcutExpression;
 
