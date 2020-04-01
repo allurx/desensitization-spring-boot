@@ -12,7 +12,7 @@
 </dependency>
 ```
 # 测试用例
-1. [需要对返回值脱敏的方法](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/main/java/red/zyc/desensitization/spring/boot/sample/web/controller/DesensitizationController.java)
+1. [需要对返回值或参数脱敏的方法](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/main/java/red/zyc/desensitization/spring/boot/sample/web/controller/DesensitizationController.java)
 2. [测试用例](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/test/java/red/zyc/desensitization/spring/boot/sample/web/DesensitizationSpringBootSampleWebApplicationTests.java)
 # License
 [Apache License 2.0](https://github.com/Allurx/desensitization-spring-boot/blob/master/LICENSE.txt)
