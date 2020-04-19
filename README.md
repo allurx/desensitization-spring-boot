@@ -1,5 +1,5 @@
 # desensitization-spring-boot
-在[desensitization](https://github.com/Allurx/desensitization)库的基础上适配spring-boot，基于spring-aop对全局方法进行拦截脱敏处理，默认会对当前spring-boot工程启动类所在的包及其子包下所有**需要**脱敏处理的方法进行拦截。当然你也可以在spring的配置文件中通过desensitization开头的配置参数编写自己的切点表达式以便更好地控制脱敏。
+将[desensitization](https://github.com/Allurx/desensitization)库与spring-boot集成，基于spring-aop对全局方法进行拦截脱敏处理，默认会对当前spring-boot工程启动类所在的包及其子包下所有**需要**脱敏处理的方法进行拦截。当然你也可以在spring的配置文件中通过desensitization开头的配置参数编写自己的切点表达式以便更好地控制脱敏。
 # 用法
 ## jdk版本
 大于等于1.8
