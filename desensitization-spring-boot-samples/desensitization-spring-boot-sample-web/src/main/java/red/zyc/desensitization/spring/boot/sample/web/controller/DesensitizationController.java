@@ -29,7 +29,6 @@ import java.util.Map;
 /**
  * @author zyc
  */
-
 @RestController
 @RequestMapping("/desensitization")
 public class DesensitizationController {
