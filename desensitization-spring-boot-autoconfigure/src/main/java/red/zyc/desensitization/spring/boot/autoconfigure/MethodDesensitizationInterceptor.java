@@ -49,8 +49,9 @@ public class MethodDesensitizationInterceptor implements MethodInterceptor {
                 .filter(i -> needDesensitized(parameters[i].getAnnotatedType()))
                 .forEach(i -> arguments[i] = Sensitive.desensitize(arguments[i], TypeToken.of(parameters[i].getAnnotatedType())));
         Object proceed = invocation.proceed();
-        if (needDesensitized(method.getAnnotatedReturnType())) {
-            return Sensitive.desensitize(proceed, TypeToken.of(method.getAnnotatedReturnType()));
+        AnnotatedType returnType = method.getAnnotatedReturnType();
+        if (needDesensitized(returnType)) {
+            return Sensitive.desensitize(proceed, TypeToken.of(returnType));
         }
         return proceed;
     }
