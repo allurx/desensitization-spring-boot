@@ -29,12 +29,12 @@ public class CustomizedResponse<T> {
     /**
      * 响应码
      */
-    private final String code;
+    private String code;
 
     /**
      * 响应信息
      */
-    private final String message;
+    private String message;
 
     public CustomizedResponse(T data, String message, String code) {
         this.data = data;
@@ -44,7 +44,7 @@ public class CustomizedResponse<T> {
 
 }
 ```
-对该实体类型进行脱敏处理时我们需要自定义一个类型解析器来解析该类型
+对自定义类型进行脱敏处理我们需要配置一个类型解析器来解析该类型
 ```java
 @Configuration
 public class DesensitizationConfig {
@@ -81,7 +81,7 @@ public class DesensitizationConfig {
 }
 ```
 该配置是用来解析CustomizedResponse类型的对象，通常情况下我们只需要对响应的实际数据(data)进行脱敏即可。
-将上面的类型解析器添加到Spring容器中之后，接下来我们只需将相应的脱敏注解添加到方法返回对象CustomizedResponse的泛型参数上就能完成自定义类型的脱敏处理。
+将上面的类型解析器添加到Spring上下文中之后，接下来我们只需将脱敏注解标记到需要脱敏的方法返回对象的泛型参数上就能完成CustomizedResponse类型数据的自动脱敏处理。
 # 例子
 1. [需要对返回值脱敏的方法](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/main/java/red/zyc/desensitization/spring/boot/sample/web/controller/DesensitizationController.java)
 2. [测试用例](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/test/java/red/zyc/desensitization/spring/boot/sample/web/DesensitizationSpringBootSampleWebApplicationTests.java)
