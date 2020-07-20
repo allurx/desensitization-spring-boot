@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>red.zyc</groupId>
     <artifactId>desensitization-spring-boot</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <packaging>pom</packaging>
 
     <name>desensitization-spring-boot</name>
@@ -18,7 +18,7 @@
     </modules>
 
     <properties>
-        <desensitization.version>2.3.1</desensitization.version>
+        <desensitization.version>2.3.3</desensitization.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
     </properties>
