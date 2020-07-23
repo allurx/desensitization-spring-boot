@@ -20,8 +20,8 @@ import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import red.zyc.desensitization.Sensitive;
 import red.zyc.desensitization.annotation.CascadeSensitive;
+import red.zyc.desensitization.annotation.SensitiveAnnotation;
 import red.zyc.desensitization.support.TypeToken;
-import red.zyc.desensitization.util.ReflectionUtil;
 
 import java.lang.reflect.AnnotatedArrayType;
 import java.lang.reflect.AnnotatedParameterizedType;
@@ -50,10 +50,7 @@ public class MethodDesensitizationInterceptor implements MethodInterceptor {
                 .forEach(i -> arguments[i] = Sensitive.desensitize(arguments[i], TypeToken.of(parameters[i].getAnnotatedType())));
         Object proceed = invocation.proceed();
         AnnotatedType returnType = method.getAnnotatedReturnType();
-        if (needDesensitized(returnType)) {
-            return Sensitive.desensitize(proceed, TypeToken.of(returnType));
-        }
-        return proceed;
+        return needDesensitized(returnType) ? Sensitive.desensitize(proceed, TypeToken.of(returnType)) : proceed;
     }
 
     /**
@@ -71,7 +68,7 @@ public class MethodDesensitizationInterceptor implements MethodInterceptor {
      * @return 该对象是否需要被脱敏
      */
     private boolean needDesensitized(AnnotatedType annotatedType) {
-        if (ReflectionUtil.getFirstDirectlyPresentSensitiveAnnotation(annotatedType) != null) {
+        if (Arrays.stream(annotatedType.getDeclaredAnnotations()).anyMatch(annotation -> annotation.annotationType().isAnnotationPresent(SensitiveAnnotation.class))) {
             return true;
         }
         if (annotatedType.getDeclaredAnnotation(CascadeSensitive.class) != null) {
@@ -99,4 +96,5 @@ public class MethodDesensitizationInterceptor implements MethodInterceptor {
         }
         return false;
     }
+
 }

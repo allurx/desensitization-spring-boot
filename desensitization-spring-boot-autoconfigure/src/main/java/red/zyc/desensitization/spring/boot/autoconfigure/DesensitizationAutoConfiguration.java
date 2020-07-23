@@ -27,10 +27,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import red.zyc.desensitization.resolver.TypeResolver;
-import red.zyc.desensitization.resolver.TypeResolvers;
 
 import java.lang.reflect.AnnotatedParameterizedType;
-import java.lang.reflect.AnnotatedType;
 import java.util.Optional;
 
 /**
@@ -59,7 +57,7 @@ public class DesensitizationAutoConfiguration {
     }
 
     @Bean
-    public TypeResolver<ResponseEntity<?>, AnnotatedParameterizedType> responseEntityResolver() {
+    public TypeResolver<ResponseEntity<Object>, AnnotatedParameterizedType> responseEntityResolver() {
         return new ResponseEntityTypeResolver();
     }
 
@@ -73,31 +71,6 @@ public class DesensitizationAutoConfiguration {
                 .orElse("execution(* "
                         + springApplication.getMainApplicationClass().getPackage().getName()
                         + "..*.*(..))");
-    }
-
-    /**
-     * 用来解析返回值类型为{@link ResponseEntity}的类型解析器
-     */
-    public static class ResponseEntityTypeResolver implements TypeResolver<ResponseEntity<?>, AnnotatedParameterizedType> {
-
-        private final int order = TypeResolvers.randomOrder();
-
-        @Override
-        public ResponseEntity<?> resolve(ResponseEntity<?> responseEntity, AnnotatedParameterizedType annotatedParameterizedType) {
-            AnnotatedType typeArgument = annotatedParameterizedType.getAnnotatedActualTypeArguments()[0];
-            Object erased = TypeResolvers.resolve(responseEntity.getBody(), typeArgument);
-            return new ResponseEntity<>(erased, responseEntity.getHeaders(), responseEntity.getStatusCode());
-        }
-
-        @Override
-        public boolean support(Object value, AnnotatedType annotatedType) {
-            return value instanceof ResponseEntity && annotatedType instanceof AnnotatedParameterizedType;
-        }
-
-        @Override
-        public int order() {
-            return order;
-        }
     }
 
 }
