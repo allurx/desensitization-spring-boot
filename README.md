@@ -83,7 +83,7 @@ public class DesensitizationConfig {
 该配置是用来解析CustomizedResponse类型的对象，通常情况下我们只需要对响应的实际数据(data)进行脱敏即可。
 将上面的类型解析器添加到Spring上下文中之后，接下来我们只需将脱敏注解标记到需要脱敏的方法返回对象的泛型参数上就能完成CustomizedResponse类型数据的自动脱敏处理。
 # 例子
-1. [需要对返回值脱敏的方法](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/main/java/red/zyc/desensitization/spring/boot/sample/web/controller/DesensitizationController.java)
+1. [需要对返回值或参数脱敏的方法](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/main/java/red/zyc/desensitization/spring/boot/sample/web/controller/DesensitizationController.java)
 2. [测试用例](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/test/java/red/zyc/desensitization/spring/boot/sample/web/DesensitizationSpringBootSampleWebApplicationTests.java)
 # License
 [Apache License 2.0](https://github.com/Allurx/desensitization-spring-boot/blob/master/LICENSE.txt)
