@@ -1,4 +1,4 @@
-package red.zyc.desensitization.spring.boot.autoconfigure;/*
+/*
  * Copyright 2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,30 +14,33 @@ package red.zyc.desensitization.spring.boot.autoconfigure;/*
  * limitations under the License.
  */
 
+package red.zyc.desensitization.spring.boot.autoconfigure;
+
 import org.aspectj.weaver.tools.PointcutPrimitive;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
+ * 脱敏配置参数，其中{@link #pointcutExpression 切点表达式}只支持以下几种AspectJ切点表达式原语：
+ * <ul>
+ *     <li>{@link PointcutPrimitive#EXECUTION}</li>
+ *     <li>{@link PointcutPrimitive#ARGS}</li>
+ *     <li>{@link PointcutPrimitive#REFERENCE}</li>
+ *     <li>{@link PointcutPrimitive#THIS}</li>
+ *     <li>{@link PointcutPrimitive#TARGET}</li>
+ *     <li>{@link PointcutPrimitive#WITHIN}</li>
+ *     <li>{@link PointcutPrimitive#AT_ANNOTATION}</li>
+ *     <li>{@link PointcutPrimitive#AT_WITHIN}</li>
+ *     <li>{@link PointcutPrimitive#AT_ARGS}</li>
+ *     <li>{@link PointcutPrimitive#AT_TARGET}</li>
+ * </ul>
+ *
  * @author zyc
  */
 @ConfigurationProperties(prefix = "desensitization")
 public class DesensitizationProperties {
 
     /**
-     * 切点表达式，只支持以下几种AspectJ切点表达式原语：
-     * <ul>
-     *     <li>{@link PointcutPrimitive#EXECUTION}</li>
-     *     <li>{@link PointcutPrimitive#ARGS}</li>
-     *     <li>{@link PointcutPrimitive#REFERENCE}</li>
-     *     <li>{@link PointcutPrimitive#THIS}</li>
-     *     <li>{@link PointcutPrimitive#TARGET}</li>
-     *     <li>{@link PointcutPrimitive#WITHIN}</li>
-     *     <li>{@link PointcutPrimitive#AT_ANNOTATION}</li>
-     *     <li>{@link PointcutPrimitive#AT_WITHIN}</li>
-     *     <li>{@link PointcutPrimitive#AT_ARGS}</li>
-     *     <li>{@link PointcutPrimitive#AT_TARGET}</li>
-     * </ul>
-     * <strong>默认的切点表达式是当前spring-boot工程启动类所在的包及其子包下的所有方法</strong>
+     * 切点表达式，默认值为当前spring-boot工程启动类所在包及其子包下的所有方法
      */
     private String pointcutExpression;
 
