@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>red.zyc</groupId>
+    <groupId>red.zyc.boot</groupId>
     <artifactId>desensitization-spring-boot</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>pom</packaging>
 
     <name>desensitization-spring-boot</name>
@@ -53,12 +53,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>red.zyc</groupId>
+                <groupId>red.zyc.boot</groupId>
                 <artifactId>desensitization-spring-boot-autoconfigure</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>red.zyc</groupId>
+                <groupId>red.zyc.boot</groupId>
                 <artifactId>desensitization-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>

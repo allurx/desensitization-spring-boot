@@ -3,11 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>red.zyc</groupId>
+        <groupId>red.zyc.boot</groupId>
         <artifactId>desensitization-spring-boot</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
     </parent>
-    <groupId>red.zyc</groupId>
     <artifactId>desensitization-spring-boot-samples</artifactId>
     <packaging>pom</packaging>
     <name>desensitization-spring-boot-samples</name>
