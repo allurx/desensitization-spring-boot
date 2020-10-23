@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-red.zyc.desensitization.spring.boot.autoconfigure.DesensitizationAutoConfiguration
+red.zyc.desensitization.boot.autoconfigure.DesensitizationAutoConfiguration
 org.springframework.boot.SpringApplicationRunListener=\
-red.zyc.desensitization.spring.boot.autoconfigure.SpringBootMainApplicationClassRunListener
+red.zyc.desensitization.boot.autoconfigure.SpringBootMainApplicationClassRunListener

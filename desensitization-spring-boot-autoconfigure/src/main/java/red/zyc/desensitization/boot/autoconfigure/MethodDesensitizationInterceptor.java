@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package red.zyc.desensitization.spring.boot.autoconfigure;
+package red.zyc.desensitization.boot.autoconfigure;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

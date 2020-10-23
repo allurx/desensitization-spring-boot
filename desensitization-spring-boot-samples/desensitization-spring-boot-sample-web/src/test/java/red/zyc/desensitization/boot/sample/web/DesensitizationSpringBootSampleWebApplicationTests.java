@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package red.zyc.desensitization.spring.boot.sample.web;
+package red.zyc.desensitization.boot.sample.web;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import red.zyc.desensitization.spring.boot.sample.web.model.Person;
+import red.zyc.desensitization.boot.sample.web.model.Person;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +45,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
      * String参数脱敏
      */
     @Test
-    public void desensitizeStringParameter() {
+    void desensitizeStringParameter() {
         LOGGER.info(restTemplate.getForObject("/desensitization/stringParameter?email={?}", String.class, "123456@qq.com"));
     }
 
@@ -53,7 +53,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
      * String返回值脱敏
      */
     @Test
-    public void desensitizeStringReturnValue() {
+    void desensitizeStringReturnValue() {
         LOGGER.info(restTemplate.getForObject("/desensitization/stringReturnValue?email={?}", String.class, "123456@qq.com"));
     }
 
@@ -61,7 +61,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
      * Collection参数脱敏
      */
     @Test
-    public void desensitizeCollectionParameter() {
+    void desensitizeCollectionParameter() {
         LOGGER.info(restTemplate.postForObject("/desensitization/collectionParameter", Stream.of("123456@qq.com", "1234567@qq.com", "1234568@qq.com").collect(Collectors.toList()), List.class).toString());
     }
 
@@ -69,7 +69,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
      * Collection返回值脱敏
      */
     @Test
-    public void desensitizeCollectionReturnValue() {
+    void desensitizeCollectionReturnValue() {
         LOGGER.info(restTemplate.postForObject("/desensitization/collectionReturnValue", Stream.of("123456@qq.com", "1234567@qq.com", "1234568@qq.com").collect(Collectors.toList()), List.class).toString());
     }
 
@@ -77,7 +77,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
      * Map参数脱敏
      */
     @Test
-    public void desensitizeMapParameter() {
+    void desensitizeMapParameter() {
         Map<String, Person> map = Stream.of("张三", "李四")
                 .collect(Collectors.toMap(s -> s, o -> new Person("12345678910", "123456@qq.com")));
         LOGGER.info(restTemplate.postForObject("/desensitization/mapParameter", map, Map.class).toString());
@@ -87,7 +87,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
      * Map返回值脱敏
      */
     @Test
-    public void desensitizeMapReturnValue() {
+    void desensitizeMapReturnValue() {
         Map<String, Person> map = Stream.of("张三", "李四")
                 .collect(Collectors.toMap(s -> s, o -> new Person("12345678910", "123456@qq.com")));
         LOGGER.info(restTemplate.postForObject("/desensitization/mapReturnValue", map, Map.class).toString());
@@ -97,7 +97,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
      * Array参数脱敏
      */
     @Test
-    public void desensitizeArrayParameter() {
+    void desensitizeArrayParameter() {
         LOGGER.info(Arrays.toString(restTemplate.postForObject("/desensitization/arrayParameter", new String[]{"123456@qq.com", "1234567@qq.com"}, String[].class)));
     }
 
@@ -105,7 +105,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
      * Array返回值脱敏
      */
     @Test
-    public void desensitizeArrayReturnValue() {
+    void desensitizeArrayReturnValue() {
         LOGGER.info(Arrays.toString(restTemplate.postForObject("/desensitization/arrayReturnValue", new String[]{"123456@qq.com", "1234567@qq.com"}, String[].class)));
     }
 
@@ -113,7 +113,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
      * Object参数脱敏
      */
     @Test
-    public void desensitizeObjectParameter() {
+    void desensitizeObjectParameter() {
         LOGGER.info(restTemplate.postForObject("/desensitization/objectParameter", new Person("12345678910", "123456@qq.com"), Person.class).toString());
     }
 
@@ -121,7 +121,7 @@ class DesensitizationSpringBootSampleWebApplicationTests {
      * Object返回值脱敏
      */
     @Test
-    public void desensitizeObjectReturnValue() {
+    void desensitizeObjectReturnValue() {
         LOGGER.info(restTemplate.postForObject("/desensitization/objectReturnValue", new Person("12345678910", "123456@qq.com"), Person.class).toString());
     }
 
