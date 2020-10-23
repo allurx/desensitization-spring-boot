@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package red.zyc.desensitization.spring.boot.sample.web.controller;
+package red.zyc.desensitization.boot.sample.web.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import red.zyc.desensitization.annotation.CascadeSensitive;
 import red.zyc.desensitization.annotation.ChineseNameSensitive;
 import red.zyc.desensitization.annotation.EmailSensitive;
-import red.zyc.desensitization.spring.boot.sample.web.model.Person;
+import red.zyc.desensitization.boot.sample.web.model.Person;
 
 import java.util.List;
 import java.util.Map;

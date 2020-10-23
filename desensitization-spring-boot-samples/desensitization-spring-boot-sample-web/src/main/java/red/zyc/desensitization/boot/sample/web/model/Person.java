@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package red.zyc.desensitization.spring.boot.sample.web.model;
+package red.zyc.desensitization.boot.sample.web.model;
 
 import red.zyc.desensitization.annotation.EmailSensitive;
 import red.zyc.desensitization.annotation.PhoneNumberSensitive;
