@@ -16,7 +16,6 @@
 
 package red.zyc.desensitization.boot.sample.web;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +29,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author zyc
@@ -48,7 +49,7 @@ class ResponseEntityDesensitizationTest {
     @Test
     void desensitizeStringParameter() {
         String body = restTemplate.getForObject("/responseEntityDesensitization/stringParameter?email={?}", String.class, "123456@qq.com");
-        Assert.assertNotNull(body);
+        assertNotNull(body);
         LOGGER.info(body);
     }
 
@@ -58,7 +59,7 @@ class ResponseEntityDesensitizationTest {
     @Test
     void desensitizeStringReturnValue() {
         String body = restTemplate.getForObject("/responseEntityDesensitization/stringReturnValue?email={?}", String.class, "123456@qq.com");
-        Assert.assertNotNull(body);
+        assertNotNull(body);
         LOGGER.info(body);
     }
 
@@ -68,7 +69,7 @@ class ResponseEntityDesensitizationTest {
     @Test
     void desensitizeCollectionParameter() {
         List<?> body = restTemplate.postForObject("/responseEntityDesensitization/collectionParameter", Stream.of("123456@qq.com", "1234567@qq.com", "1234568@qq.com").collect(Collectors.toList()), List.class);
-        Assert.assertNotNull(body);
+        assertNotNull(body);
         LOGGER.info(body.toString());
     }
 
@@ -78,7 +79,7 @@ class ResponseEntityDesensitizationTest {
     @Test
     void desensitizeCollectionReturnValue() {
         List<?> body = restTemplate.postForObject("/responseEntityDesensitization/collectionReturnValue", Stream.of("123456@qq.com", "1234567@qq.com", "1234568@qq.com").collect(Collectors.toList()), List.class);
-        Assert.assertNotNull(body);
+        assertNotNull(body);
         LOGGER.info(body.toString());
     }
 
@@ -89,7 +90,7 @@ class ResponseEntityDesensitizationTest {
     void desensitizeMapParameter() {
         Map<String, Person> map = Stream.of("张三", "李四").collect(Collectors.toMap(s -> s, o -> new Person("12345678910", "123456@qq.com")));
         Map<?, ?> body = restTemplate.postForObject("/responseEntityDesensitization/mapParameter", map, Map.class);
-        Assert.assertNotNull(body);
+        assertNotNull(body);
         LOGGER.info(body.toString());
     }
 
@@ -100,7 +101,7 @@ class ResponseEntityDesensitizationTest {
     void desensitizeMapReturnValue() {
         Map<String, Person> map = Stream.of("张三", "李四").collect(Collectors.toMap(s -> s, o -> new Person("12345678910", "123456@qq.com")));
         Map<?, ?> body = restTemplate.postForObject("/responseEntityDesensitization/mapReturnValue", map, Map.class);
-        Assert.assertNotNull(body);
+        assertNotNull(body);
         LOGGER.info(body.toString());
     }
 
@@ -110,7 +111,7 @@ class ResponseEntityDesensitizationTest {
     @Test
     void desensitizeArrayParameter() {
         String[] body = restTemplate.postForObject("/responseEntityDesensitization/arrayParameter", new String[]{"123456@qq.com", "1234567@qq.com"}, String[].class);
-        Assert.assertNotNull(body);
+        assertNotNull(body);
         LOGGER.info(Arrays.toString(body));
     }
 
@@ -120,7 +121,7 @@ class ResponseEntityDesensitizationTest {
     @Test
     void desensitizeArrayReturnValue() {
         String[] body = restTemplate.postForObject("/responseEntityDesensitization/arrayReturnValue", new String[]{"123456@qq.com", "1234567@qq.com"}, String[].class);
-        Assert.assertNotNull(body);
+        assertNotNull(body);
         LOGGER.info(Arrays.toString(body));
     }
 
@@ -130,7 +131,7 @@ class ResponseEntityDesensitizationTest {
     @Test
     void desensitizeObjectParameter() {
         Person body = restTemplate.postForObject("/responseEntityDesensitization/objectParameter", new Person("12345678910", "123456@qq.com"), Person.class);
-        Assert.assertNotNull(body);
+        assertNotNull(body);
         LOGGER.info(body.toString());
     }
 
@@ -140,7 +141,7 @@ class ResponseEntityDesensitizationTest {
     @Test
     void desensitizeObjectReturnValue() {
         Person body = restTemplate.postForObject("/responseEntityDesensitization/objectReturnValue", new Person("12345678910", "123456@qq.com"), Person.class);
-        Assert.assertNotNull(body);
+        assertNotNull(body);
         LOGGER.info(body.toString());
     }
 
