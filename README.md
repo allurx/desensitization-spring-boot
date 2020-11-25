@@ -37,7 +37,7 @@ public class CustomizedResponse<T> {
 
 }
 ```
-对自定义类型进行脱敏处理我们需要配置一个类型解析器来解析该类型
+对自定义类型进行脱敏处理时我们需要配置一个类型解析器来解析该类型
 ```java
 @Configuration
 public class DesensitizationConfig {
