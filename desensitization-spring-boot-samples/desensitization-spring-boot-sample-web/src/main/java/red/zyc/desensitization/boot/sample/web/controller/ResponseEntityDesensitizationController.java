@@ -29,11 +29,13 @@ import java.util.Map;
 import static org.springframework.http.ResponseEntity.ok;
 
 /**
+ * 脱敏{@link ResponseEntity}类型的数据
+ *
  * @author zyc
  */
 @RestController
-@RequestMapping("/desensitization")
-public class DesensitizationController {
+@RequestMapping("/responseEntityDesensitization")
+public class ResponseEntityDesensitizationController {
 
     @GetMapping("/stringParameter")
     public ResponseEntity<String> desensitizeStringParameter(@RequestParam @EmailSensitive String email) {
