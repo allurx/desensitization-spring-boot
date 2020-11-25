@@ -42,14 +42,14 @@ public class CustomizedResponse<T> {
     public CustomizedResponse() {
     }
 
-    public CustomizedResponse(T data, String message, String code) {
+    public CustomizedResponse(T data, String code, String message) {
         this.data = data;
-        this.message = message;
         this.code = code;
+        this.message = message;
     }
 
     public static <R> CustomizedResponse<R> ok(R data) {
-        return new CustomizedResponse<>(data, "成功", "200");
+        return new CustomizedResponse<>(data, "200", "成功");
     }
 
     public T getData() {
