@@ -11,7 +11,7 @@
 <dependency>
   <groupId>red.zyc.boot</groupId>
   <artifactId>desensitization-spring-boot-starter</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
 </dependency>
 ```
 ## 注意
