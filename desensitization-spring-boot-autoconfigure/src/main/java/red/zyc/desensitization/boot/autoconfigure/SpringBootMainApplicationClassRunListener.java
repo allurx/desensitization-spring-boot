@@ -16,11 +16,14 @@
 
 package red.zyc.desensitization.boot.autoconfigure;
 
+import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import red.zyc.desensitization.resolver.TypeResolver;
 import red.zyc.desensitization.resolver.TypeResolvers;
+
+import java.time.Duration;
 
 /**
  * @author zyc
@@ -37,13 +40,14 @@ public class SpringBootMainApplicationClassRunListener implements SpringApplicat
     }
 
     @Override
-    public void starting() {
+    public void starting(ConfigurableBootstrapContext bootstrapContext) {
         DesensitizationAutoConfiguration.SPRING_APPLICATION_HOLDER.set(springApplication);
     }
 
     @Override
-    public void running(ConfigurableApplicationContext context) {
+    public void ready(ConfigurableApplicationContext context, Duration timeTaken) {
         DesensitizationAutoConfiguration.SPRING_APPLICATION_HOLDER.remove();
         context.getBeansOfType(TypeResolver.class).values().forEach(TypeResolvers::register);
     }
+
 }
