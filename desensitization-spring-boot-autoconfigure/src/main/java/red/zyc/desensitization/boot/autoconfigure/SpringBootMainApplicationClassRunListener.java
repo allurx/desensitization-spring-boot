@@ -20,8 +20,8 @@ import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.context.ConfigurableApplicationContext;
-import red.zyc.desensitization.resolver.TypeResolver;
-import red.zyc.desensitization.resolver.TypeResolvers;
+import red.zyc.parser.AnnotationParser;
+import red.zyc.parser.type.TypeParser;
 
 import java.time.Duration;
 
@@ -47,7 +47,7 @@ public class SpringBootMainApplicationClassRunListener implements SpringApplicat
     @Override
     public void ready(ConfigurableApplicationContext context, Duration timeTaken) {
         DesensitizationAutoConfiguration.SPRING_APPLICATION_HOLDER.remove();
-        context.getBeansOfType(TypeResolver.class).values().forEach(TypeResolvers::register);
+        context.getBeansOfType(TypeParser.class).values().forEach(AnnotationParser::addTypeParser);
     }
 
 }

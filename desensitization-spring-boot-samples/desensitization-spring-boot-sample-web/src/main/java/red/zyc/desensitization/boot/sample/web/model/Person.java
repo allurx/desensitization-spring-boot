@@ -16,8 +16,8 @@
 
 package red.zyc.desensitization.boot.sample.web.model;
 
-import red.zyc.desensitization.annotation.EmailSensitive;
-import red.zyc.desensitization.annotation.PhoneNumberSensitive;
+import red.zyc.desensitization.annotation.Email;
+import red.zyc.desensitization.annotation.PhoneNumber;
 
 import java.util.StringJoiner;
 
@@ -26,10 +26,10 @@ import java.util.StringJoiner;
  */
 public class Person {
 
-    @PhoneNumberSensitive
+    @PhoneNumber
     private String phoneNumber;
 
-    @EmailSensitive
+    @Email
     private String email;
 
     public Person() {

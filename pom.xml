@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>red.zyc.boot</groupId>
     <artifactId>desensitization-spring-boot</artifactId>
-    <version>1.0.8</version>
+    <version>2.0.0</version>
     <packaging>pom</packaging>
 
     <name>desensitization-spring-boot</name>
-    <url>https://github.com/Allurx/desensitization-spring-boot</url>
+    <url>https://github.com/allurx/desensitization-spring-boot</url>
     <description>desensitization-spring-boot</description>
 
     <modules>
@@ -18,34 +18,38 @@
     </modules>
 
     <properties>
-        <desensitization.version>2.4.3</desensitization.version>
+        <desensitization.version>3.0.0</desensitization.version>
+        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring-boot.version>2.6.3</spring-boot.version>
+        <spring-boot.version>3.1.5</spring-boot.version>
     </properties>
 
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
 
     <scm>
-        <url>https://github.com/Allurx/desensitization-spring-boot</url>
-        <connection>scm:git:https://github.com/Allurx/desensitization-spring-boot.git</connection>
-        <developerConnection>scm:git:https://github.com/Allurx/desensitization-spring-boot.git</developerConnection>
+        <url>https://github.com/allurx/desensitization-spring-boot</url>
+        <connection>scm:git:https://github.com/allurx/desensitization-spring-boot.git</connection>
+        <developerConnection>scm:git:https://github.com/allurx/desensitization-spring-boot.git</developerConnection>
     </scm>
 
     <issueManagement>
         <system>GitHub Issues</system>
-        <url>https://github.com/Allurx/desensitization-spring-boot/issues</url>
+        <url>https://github.com/allurx/desensitization-spring-boot/issues</url>
     </issueManagement>
 
     <developers>
         <developer>
             <name>zyc</name>
-            <email>1343786337@qq.com</email>
+            <email>allurx.zyc@gmail.com</email>
             <url>https://www.zyc.red</url>
         </developer>
     </developers>
@@ -90,6 +94,20 @@
         </repository>
     </distributionManagement>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <profiles>
         <profile>
             <id>release</id>
@@ -101,7 +119,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-source-plugin</artifactId>
-                        <version>3.1.0</version>
+                        <version>${maven-source-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-sources</id>
@@ -114,11 +132,10 @@
                             <attach>true</attach>
                         </configuration>
                     </plugin>
-                    <!--生成javadoc-->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.1.1</version>
+                        <version>${maven-javadoc-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>attach-javadoc</id>
@@ -133,11 +150,10 @@
                             <docencoding>UTF-8</docencoding>
                         </configuration>
                     </plugin>
-                    <!--使用gpg进行签名-->
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
+                        <version>${maven-gpg-plugin.version}</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
