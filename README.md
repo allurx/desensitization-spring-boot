@@ -1,17 +1,17 @@
 # desensitization-spring-boot
-将[desensitization](https://github.com/Allurx/desensitization) 库集成到spring-boot中实现数据自动脱敏。
+将[desensitization](https://github.com/allurx/desensitization) 库集成到spring-boot中实现数据自动脱敏。
 实现原理是基于spring-aop对全局方法进行拦截脱敏处理，默认会对当前spring-boot工程启动类所在的包及其子包下所有**需要**脱敏处理的方法进行拦截。
 当然你也可以在spring的配置文件中通过desensitization开头的配置参数编写自己的切点表达式或者编写一个名称为**desensitizationAdvisor**的Advisor
 添加到spring上下文中以便更好地控制脱敏。
 # 用法
-## jdk版本
-大于等于1.8
+## spring-boot版本
+3.1.5
 ## maven依赖
 ```xml
 <dependency>
   <groupId>red.zyc.boot</groupId>
   <artifactId>desensitization-spring-boot-starter</artifactId>
-  <version>1.0.8</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 ## 注意
@@ -41,20 +41,20 @@ public class CustomizedResponse<T> {
 ```java
 @Configuration
 public class DesensitizationConfig {
-
+    
     @Bean
-    public TypeResolver<CustomizedResponse<Object>, AnnotatedParameterizedType> typeResolver() {
-        return new CustomizedResponseTypeResolver();
+    public TypeParser<CustomizedResponse<Object>, AnnotatedParameterizedType> typeParser() {
+        return new CustomizedResponseTypeParser();
     }
+    
+    public static class CustomizedResponseTypeParser implements TypeParser<CustomizedResponse<Object>, AnnotatedParameterizedType>, AopInfrastructureBean {
 
-    public static class CustomizedResponseTypeResolver implements TypeResolver<CustomizedResponse<Object>, AnnotatedParameterizedType>, AopInfrastructureBean {
-
-        private final int order = TypeResolvers.randomOrder();
+        private final int order = AnnotationParser.randomOrder();
 
         @Override
-        public CustomizedResponse<Object> resolve(CustomizedResponse<Object> response, AnnotatedParameterizedType annotatedParameterizedType) {
+        public CustomizedResponse<Object> parse(CustomizedResponse<Object> response, AnnotatedParameterizedType annotatedParameterizedType) {
             AnnotatedType typeArgument = annotatedParameterizedType.getAnnotatedActualTypeArguments()[0];
-            Object erased = TypeResolvers.resolve(response.getData(), typeArgument);
+            Object erased = AnnotationParser.parse(response.getData(), typeArgument);
             return new CustomizedResponse<>(erased, response.getMessage(), response.getCode());
         }
 
@@ -74,10 +74,10 @@ public class DesensitizationConfig {
 将上面的类型解析器添加到Spring上下文中之后，接下来我们只需将脱敏注解标记到需要脱敏的方法返回对象的泛型参数上就能完成CustomizedResponse类型数据的自动脱敏处理。
 # 例子
 ## 脱敏ResponseEntity类型的数据
-1. [需要脱敏的方法](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/main/java/red/zyc/desensitization/boot/sample/web/controller/ResponseEntityDesensitizationController.java)
-2. [测试用例](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/test/java/red/zyc/desensitization/boot/sample/web/ResponseEntityDesensitizationTest.java)
+1. [需要脱敏的方法](https://github.com/allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/main/java/red/zyc/desensitization/boot/sample/web/controller/ResponseEntityDesensitizationController.java)
+2. [测试用例](https://github.com/allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/test/java/red/zyc/desensitization/boot/sample/web/ResponseEntityDesensitizationTest.java)
 ## 脱敏CustomizedResponse类型的数据
-1. [需要脱敏的方法](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/main/java/red/zyc/desensitization/boot/sample/web/controller/CustomizedResponseDesensitizationController.java)
-2. [测试用例](https://github.com/Allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/test/java/red/zyc/desensitization/boot/sample/web/CustomizedResponseDesensitizationTest.java)
+1. [需要脱敏的方法](https://github.com/allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/main/java/red/zyc/desensitization/boot/sample/web/controller/CustomizedResponseDesensitizationController.java)
+2. [测试用例](https://github.com/allurx/desensitization-spring-boot/blob/master/desensitization-spring-boot-samples/desensitization-spring-boot-sample-web/src/test/java/red/zyc/desensitization/boot/sample/web/CustomizedResponseDesensitizationTest.java)
 # License
-[Apache License 2.0](https://github.com/Allurx/desensitization-spring-boot/blob/master/LICENSE.txt)
+[Apache License 2.0](https://github.com/allurx/desensitization-spring-boot/blob/master/LICENSE.txt)

@@ -19,14 +19,13 @@ package red.zyc.desensitization.boot.autoconfigure;
 import org.springframework.aop.Advisor;
 import org.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import red.zyc.desensitization.resolver.TypeResolver;
+import red.zyc.parser.type.TypeParser;
 
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.util.Optional;
@@ -34,8 +33,7 @@ import java.util.Optional;
 /**
  * @author zyc
  */
-@Configuration
-@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@AutoConfiguration
 @EnableConfigurationProperties(DesensitizationProperties.class)
 public class DesensitizationAutoConfiguration {
 
@@ -57,8 +55,8 @@ public class DesensitizationAutoConfiguration {
     }
 
     @Bean
-    public TypeResolver<ResponseEntity<Object>, AnnotatedParameterizedType> responseEntityResolver() {
-        return new ResponseEntityTypeResolver();
+    public TypeParser<ResponseEntity<Object>, AnnotatedParameterizedType> responseEntityResolver() {
+        return new ResponseEntityTypeParser();
     }
 
     /**
@@ -67,10 +65,7 @@ public class DesensitizationAutoConfiguration {
     private String pointcutExpression() {
         SpringApplication springApplication = SPRING_APPLICATION_HOLDER.get();
         Assert.notNull(springApplication, () -> "无法获取SpringApplication！当前应用可能不是spring-boot工程。");
-        return Optional.ofNullable(desensitizationProperties.getPointcutExpression())
-                .orElse("execution(* "
-                        + springApplication.getMainApplicationClass().getPackage().getName()
-                        + "..*.*(..))");
+        return Optional.ofNullable(desensitizationProperties.getPointcutExpression()).orElse("execution(* " + springApplication.getMainApplicationClass().getPackage().getName() + "..*.*(..))");
     }
 
 }

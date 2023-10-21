@@ -19,10 +19,10 @@ package red.zyc.desensitization.boot.sample.web.config;
 import org.springframework.aop.framework.AopInfrastructureBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import red.zyc.desensitization.boot.autoconfigure.ResponseEntityTypeResolver;
+import red.zyc.desensitization.boot.autoconfigure.ResponseEntityTypeParser;
 import red.zyc.desensitization.boot.sample.web.model.CustomizedResponse;
-import red.zyc.desensitization.resolver.TypeResolver;
-import red.zyc.desensitization.resolver.TypeResolvers;
+import red.zyc.parser.AnnotationParser;
+import red.zyc.parser.type.TypeParser;
 
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
@@ -36,28 +36,28 @@ import java.lang.reflect.AnnotatedType;
 public class DesensitizationConfig {
 
     /**
-     * 将{@link CustomizedResponseTypeResolver}注册到spring中
+     * 将{@link CustomizedResponseTypeParser}注册到spring中
      *
-     * @return {@link CustomizedResponseTypeResolver}
+     * @return {@link CustomizedResponseTypeParser}
      */
     @Bean
-    public TypeResolver<CustomizedResponse<Object>, AnnotatedParameterizedType> typeResolver() {
-        return new CustomizedResponseTypeResolver();
+    public TypeParser<CustomizedResponse<Object>, AnnotatedParameterizedType> typeParser() {
+        return new CustomizedResponseTypeParser();
     }
 
     /**
      * 自定义脱敏解析器用来解析{@link CustomizedResponse}类型的数据
      *
-     * @see ResponseEntityTypeResolver
+     * @see ResponseEntityTypeParser
      */
-    public static class CustomizedResponseTypeResolver implements TypeResolver<CustomizedResponse<Object>, AnnotatedParameterizedType>, AopInfrastructureBean {
+    public static class CustomizedResponseTypeParser implements TypeParser<CustomizedResponse<Object>, AnnotatedParameterizedType>, AopInfrastructureBean {
 
-        private final int order = TypeResolvers.randomOrder();
+        private final int order = AnnotationParser.randomOrder();
 
         @Override
-        public CustomizedResponse<Object> resolve(CustomizedResponse<Object> response, AnnotatedParameterizedType annotatedParameterizedType) {
+        public CustomizedResponse<Object> parse(CustomizedResponse<Object> response, AnnotatedParameterizedType annotatedParameterizedType) {
             AnnotatedType typeArgument = annotatedParameterizedType.getAnnotatedActualTypeArguments()[0];
-            Object erased = TypeResolvers.resolve(response.getData(), typeArgument);
+            Object erased = AnnotationParser.parse(response.getData(), typeArgument);
             return new CustomizedResponse<>(erased, response.getMessage(), response.getCode());
         }
 

@@ -19,9 +19,9 @@ package red.zyc.desensitization.boot.autoconfigure;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import red.zyc.desensitization.Sensitive;
-import red.zyc.desensitization.annotation.CascadeSensitive;
-import red.zyc.desensitization.annotation.SensitiveAnnotation;
-import red.zyc.desensitization.support.TypeToken;
+import red.zyc.parser.handler.Parse;
+import red.zyc.parser.type.AnnotatedTypeToken;
+import red.zyc.parser.type.Cascade;
 
 import java.lang.reflect.AnnotatedArrayType;
 import java.lang.reflect.AnnotatedParameterizedType;
@@ -47,10 +47,10 @@ public class MethodDesensitizationInterceptor implements MethodInterceptor {
         Parameter[] parameters = method.getParameters();
         IntStream.range(0, parameters.length)
                 .filter(i -> needDesensitized(parameters[i].getAnnotatedType()))
-                .forEach(i -> arguments[i] = Sensitive.desensitize(arguments[i], TypeToken.of(parameters[i].getAnnotatedType())));
+                .forEach(i -> arguments[i] = Sensitive.desensitize(arguments[i], AnnotatedTypeToken.of(parameters[i].getAnnotatedType())));
         Object proceed = invocation.proceed();
         AnnotatedType returnType = method.getAnnotatedReturnType();
-        return needDesensitized(returnType) ? Sensitive.desensitize(proceed, TypeToken.of(returnType)) : proceed;
+        return needDesensitized(returnType) ? Sensitive.desensitize(proceed, AnnotatedTypeToken.of(returnType)) : proceed;
     }
 
     /**
@@ -68,30 +68,26 @@ public class MethodDesensitizationInterceptor implements MethodInterceptor {
      * @return 该对象是否需要被脱敏
      */
     private boolean needDesensitized(AnnotatedType annotatedType) {
-        if (Arrays.stream(annotatedType.getDeclaredAnnotations()).anyMatch(annotation -> annotation.annotationType().isAnnotationPresent(SensitiveAnnotation.class))) {
+        if (Arrays.stream(annotatedType.getDeclaredAnnotations()).anyMatch(annotation -> annotation.annotationType().isAnnotationPresent(Parse.class))) {
             return true;
         }
-        if (annotatedType.getDeclaredAnnotation(CascadeSensitive.class) != null) {
+        if (annotatedType.getDeclaredAnnotation(Cascade.class) != null) {
             return true;
         }
-        if (annotatedType instanceof AnnotatedTypeVariable) {
-            AnnotatedTypeVariable annotatedTypeVariable = (AnnotatedTypeVariable) annotatedType;
+        if (annotatedType instanceof AnnotatedTypeVariable annotatedTypeVariable) {
             AnnotatedType[] annotatedBounds = annotatedTypeVariable.getAnnotatedBounds();
             return Arrays.stream(annotatedBounds).anyMatch(this::needDesensitized);
         }
-        if (annotatedType instanceof AnnotatedWildcardType) {
-            AnnotatedWildcardType annotatedWildcardType = (AnnotatedWildcardType) annotatedType;
+        if (annotatedType instanceof AnnotatedWildcardType annotatedWildcardType) {
             AnnotatedType[] annotatedUpperBounds = annotatedWildcardType.getAnnotatedUpperBounds();
             AnnotatedType[] annotatedBounds = annotatedUpperBounds.length == 0 ? annotatedWildcardType.getAnnotatedLowerBounds() : annotatedUpperBounds;
             return Arrays.stream(annotatedBounds).anyMatch(this::needDesensitized);
         }
-        if (annotatedType instanceof AnnotatedParameterizedType) {
-            AnnotatedParameterizedType annotatedParameterizedType = (AnnotatedParameterizedType) annotatedType;
+        if (annotatedType instanceof AnnotatedParameterizedType annotatedParameterizedType) {
             AnnotatedType[] annotatedActualTypeArguments = annotatedParameterizedType.getAnnotatedActualTypeArguments();
             return Arrays.stream(annotatedActualTypeArguments).anyMatch(this::needDesensitized);
         }
-        if (annotatedType instanceof AnnotatedArrayType) {
-            AnnotatedArrayType annotatedArrayType = (AnnotatedArrayType) annotatedType;
+        if (annotatedType instanceof AnnotatedArrayType annotatedArrayType) {
             return needDesensitized(annotatedArrayType.getAnnotatedGenericComponentType());
         }
         return false;

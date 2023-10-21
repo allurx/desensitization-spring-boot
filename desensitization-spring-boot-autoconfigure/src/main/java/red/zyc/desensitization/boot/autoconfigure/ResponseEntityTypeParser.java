@@ -17,8 +17,8 @@
 package red.zyc.desensitization.boot.autoconfigure;
 
 import org.springframework.http.ResponseEntity;
-import red.zyc.desensitization.resolver.TypeResolver;
-import red.zyc.desensitization.resolver.TypeResolvers;
+import red.zyc.parser.AnnotationParser;
+import red.zyc.parser.type.TypeParser;
 
 import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.AnnotatedType;
@@ -28,14 +28,14 @@ import java.lang.reflect.AnnotatedType;
  *
  * @author zyc
  */
-public class ResponseEntityTypeResolver implements TypeResolver<ResponseEntity<Object>, AnnotatedParameterizedType> {
+public class ResponseEntityTypeParser implements TypeParser<ResponseEntity<Object>, AnnotatedParameterizedType> {
 
-    private final int order = TypeResolvers.randomOrder();
+    private final int order = AnnotationParser.randomOrder();
 
     @Override
-    public ResponseEntity<Object> resolve(ResponseEntity<Object> responseEntity, AnnotatedParameterizedType annotatedParameterizedType) {
+    public ResponseEntity<Object> parse(ResponseEntity<Object> responseEntity, AnnotatedParameterizedType annotatedParameterizedType) {
         AnnotatedType typeArgument = annotatedParameterizedType.getAnnotatedActualTypeArguments()[0];
-        Object erased = TypeResolvers.resolve(responseEntity.getBody(), typeArgument);
+        Object erased = AnnotationParser.parse(responseEntity.getBody(), typeArgument);
         return new ResponseEntity<>(erased, responseEntity.getHeaders(), responseEntity.getStatusCode());
     }
 

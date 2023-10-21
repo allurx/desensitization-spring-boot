@@ -17,29 +17,28 @@
 package red.zyc.desensitization.boot.sample.web;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.RequestEntity;
 import red.zyc.desensitization.boot.sample.web.model.Person;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author zyc
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ResponseEntityDesensitizationTest {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResponseEntityDesensitizationTest.class);
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -50,8 +49,7 @@ class ResponseEntityDesensitizationTest {
     @Test
     void desensitizeStringParameter() {
         String body = restTemplate.getForObject("/responseEntityDesensitization/stringParameter?email={?}", String.class, "123456@qq.com");
-        assertNotNull(body);
-        LOGGER.info(body);
+        assertEquals("1*****@qq.com", body);
     }
 
     /**
@@ -60,50 +58,61 @@ class ResponseEntityDesensitizationTest {
     @Test
     void desensitizeStringReturnValue() {
         String body = restTemplate.getForObject("/responseEntityDesensitization/stringReturnValue?email={?}", String.class, "123456@qq.com");
-        assertNotNull(body);
-        LOGGER.info(body);
+        assertEquals("1*****@qq.com", body);
     }
 
     /**
      * Collection参数脱敏
      */
     @Test
-    void desensitizeCollectionParameter() {
-        List<?> body = restTemplate.postForObject("/responseEntityDesensitization/collectionParameter", Stream.of("123456@qq.com", "1234567@qq.com", "1234568@qq.com").collect(Collectors.toList()), List.class);
-        assertNotNull(body);
-        LOGGER.info(body.toString());
+    void desensitizeCollectionParameter() throws URISyntaxException {
+        List<String> body = restTemplate.exchange(RequestEntity.post(new URI("/responseEntityDesensitization/collectionParameter")).body(Stream.of("123456@qq.com", "123456@qq.com", "123456@qq.com").collect(Collectors.toList())), new ParameterizedTypeReference<List<String>>() {
+        }).getBody();
+        assert body != null;
+        body.forEach(s -> assertEquals("1*****@qq.com", s));
     }
 
     /**
      * Collection返回值脱敏
      */
     @Test
-    void desensitizeCollectionReturnValue() {
-        List<?> body = restTemplate.postForObject("/responseEntityDesensitization/collectionReturnValue", Stream.of("123456@qq.com", "1234567@qq.com", "1234568@qq.com").collect(Collectors.toList()), List.class);
-        assertNotNull(body);
-        LOGGER.info(body.toString());
+    void desensitizeCollectionReturnValue() throws URISyntaxException {
+        List<String> body = restTemplate.exchange(RequestEntity.post(new URI("/responseEntityDesensitization/collectionReturnValue")).body(Stream.of("123456@qq.com", "123456@qq.com", "123456@qq.com").collect(Collectors.toList())), new ParameterizedTypeReference<List<String>>() {
+        }).getBody();
+        assert body != null;
+        body.forEach(s -> assertEquals("1*****@qq.com", s));
     }
 
     /**
      * Map参数脱敏
      */
     @Test
-    void desensitizeMapParameter() {
-        Map<String, Person> map = Stream.of("张三", "李四").collect(Collectors.toMap(s -> s, o -> new Person("12345678910", "123456@qq.com")));
-        Map<?, ?> body = restTemplate.postForObject("/responseEntityDesensitization/mapParameter", map, Map.class);
-        assertNotNull(body);
-        LOGGER.info(body.toString());
+    void desensitizeMapParameter() throws URISyntaxException {
+        Map<String, Person> map = Stream.of("张三").collect(Collectors.toMap(s -> s, o -> new Person("12345678910", "123456@qq.com")));
+        Map<String, Person> body = restTemplate.exchange(RequestEntity.post(new URI("/responseEntityDesensitization/mapParameter")).body(map), new ParameterizedTypeReference<Map<String, Person>>() {
+        }).getBody();
+        assert body != null;
+        body.forEach((s, person) -> {
+            assertEquals("张*", s);
+            assertEquals("123****8910", person.getPhoneNumber());
+            assertEquals("1*****@qq.com", person.getEmail());
+        });
     }
 
     /**
      * Map返回值脱敏
      */
     @Test
-    void desensitizeMapReturnValue() {
-        Map<String, Person> map = Stream.of("张三", "李四").collect(Collectors.toMap(s -> s, o -> new Person("12345678910", "123456@qq.com")));
-        Map<?, ?> body = restTemplate.postForObject("/responseEntityDesensitization/mapReturnValue", map, Map.class);
-        assertNotNull(body);
-        LOGGER.info(body.toString());
+    void desensitizeMapReturnValue() throws URISyntaxException {
+        Map<String, Person> map = Stream.of("张三").collect(Collectors.toMap(s -> s, o -> new Person("12345678910", "123456@qq.com")));
+        Map<String, Person> body = restTemplate.exchange(RequestEntity.post(new URI("/responseEntityDesensitization/mapReturnValue")).body(map), new ParameterizedTypeReference<Map<String, Person>>() {
+        }).getBody();
+        assert body != null;
+        body.forEach((s, person) -> {
+            assertEquals("张*", s);
+            assertEquals("123****8910", person.getPhoneNumber());
+            assertEquals("1*****@qq.com", person.getEmail());
+        });
     }
 
     /**
@@ -111,9 +120,8 @@ class ResponseEntityDesensitizationTest {
      */
     @Test
     void desensitizeArrayParameter() {
-        String[] body = restTemplate.postForObject("/responseEntityDesensitization/arrayParameter", new String[]{"123456@qq.com", "1234567@qq.com"}, String[].class);
-        assertNotNull(body);
-        LOGGER.info(Arrays.toString(body));
+        String[] body = restTemplate.postForObject("/responseEntityDesensitization/arrayParameter", new String[]{"123456@qq.com", "123456@qq.com"}, String[].class);
+        Arrays.stream(body).forEach(s -> assertEquals("1*****@qq.com", s));
     }
 
     /**
@@ -121,9 +129,8 @@ class ResponseEntityDesensitizationTest {
      */
     @Test
     void desensitizeArrayReturnValue() {
-        String[] body = restTemplate.postForObject("/responseEntityDesensitization/arrayReturnValue", new String[]{"123456@qq.com", "1234567@qq.com"}, String[].class);
-        assertNotNull(body);
-        LOGGER.info(Arrays.toString(body));
+        String[] body = restTemplate.postForObject("/responseEntityDesensitization/arrayReturnValue", new String[]{"123456@qq.com", "123456@qq.com"}, String[].class);
+        Arrays.stream(body).forEach(s -> assertEquals("1*****@qq.com", s));
     }
 
     /**
@@ -131,9 +138,9 @@ class ResponseEntityDesensitizationTest {
      */
     @Test
     void desensitizeObjectParameter() {
-        Person body = restTemplate.postForObject("/responseEntityDesensitization/objectParameter", new Person("12345678910", "123456@qq.com"), Person.class);
-        assertNotNull(body);
-        LOGGER.info(body.toString());
+        var person = restTemplate.postForObject("/responseEntityDesensitization/objectParameter", new Person("12345678910", "123456@qq.com"), Person.class);
+        assertEquals("123****8910", person.getPhoneNumber());
+        assertEquals("1*****@qq.com", person.getEmail());
     }
 
     /**
@@ -141,9 +148,9 @@ class ResponseEntityDesensitizationTest {
      */
     @Test
     void desensitizeObjectReturnValue() {
-        Person body = restTemplate.postForObject("/responseEntityDesensitization/objectReturnValue", new Person("12345678910", "123456@qq.com"), Person.class);
-        assertNotNull(body);
-        LOGGER.info(body.toString());
+        var person = restTemplate.postForObject("/responseEntityDesensitization/objectReturnValue", new Person("12345678910", "123456@qq.com"), Person.class);
+        assertEquals("123****8910", person.getPhoneNumber());
+        assertEquals("1*****@qq.com", person.getEmail());
     }
 
 }
