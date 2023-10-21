@@ -9,9 +9,9 @@
 ## maven依赖
 ```xml
 <dependency>
-  <groupId>red.zyc.boot</groupId>
-  <artifactId>desensitization-spring-boot-starter</artifactId>
-  <version>2.0.0</version>
+    <groupId>red.zyc.boot</groupId>
+    <artifactId>desensitization-spring-boot-starter</artifactId>
+    <version>2.0.0</version>
 </dependency>
 ```
 ## 注意
